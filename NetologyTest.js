@@ -1,27 +1,36 @@
-const { test, expect } = require("@playwright/test");
 const { chromium } = require("playwright");
-const { email, password } = require("../user.js");
+const user = require("./user.js");
+let email = user.email;
+let password = user.password;
 
-test("Should authorize successfully", async ({ page }) => {
-  await page.goto("https://netology.ru/");
-  await page.click("text=Войти");
-  await expect(page).toHaveURL("https://netology.ru/?modal=sign_in");
+(async () => {
+  const browser = await chromium.launch({
+    headless: false,
+    slowMo: 5000,
+    devtools: true,
+  });
+  const page = await browser.newPage();
+  await page.goto("https://netology.ru/?modal=sign_in");
   await page.fill('[placeholder="Email"]', email);
   await page.fill('[placeholder="Пароль"]', password);
-  await page.click("text=Войти");
+  await page.click('button:has-text("Войти")');
 
-  await expect(page.locator("text=Мои курсы и профессии")).toBeVisible();
-});
+  const check = await page.waitForSelector("text=Мои курсы и профессии");
+  await browser.close();
+})();
 
-test("Should not authorize", async ({ page }) => {
-  await page.goto("https://netology.ru/");
-  await page.click("text=Войти");
-  await expect(page).toHaveURL("https://netology.ru/?modal=sign_in");
-  await page.fill('[placeholder="Email"]', "testemail@gmail.com");
+(async () => {
+  const browser = await chromium.launch({
+    headless: false,
+    slowMo: 5000,
+    devtools: true,
+  });
+  const page = await browser.newPage();
+  await page.goto("https://netology.ru/?modal=sign_in");
+  await page.fill('[placeholder="Email"]', "test@gmail.com");
   await page.fill('[placeholder="Пароль"]', password);
-  await page.click("text=Войти");
+  await page.click('button:has-text("Войти")');
 
-  await expect(
-    page.locator("text=Вы ввели неправильно логин или пароль")
-  ).toBeVisible();
-});
+  const check = await page.waitForSelector("text=Неверный email");
+  await browser.close();
+})();
