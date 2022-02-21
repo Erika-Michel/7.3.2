@@ -1,5 +1,5 @@
 const { chromium } = require("playwright");
-const { email, password } = require("../playwright/user.js");
+const { user } = require("../playwright/user.js");
 const { test, expect } = require("@playwright/test");
 //let email = user.email;
 //let password = user.password;
@@ -11,9 +11,9 @@ const { test, expect } = require("@playwright/test");
   });
   const page = await browser.newPage();
   await page.goto("https://netology.ru/?modal=sign_in");
-  await page.fill('[placeholder="Email"]', email);
-  await page.fill('[placeholder="Пароль"]', password);
-  await page.click('text=Войти');
+  await page.fill('[placeholder="Email"]', user.email);
+  await page.fill('[placeholder="Пароль"]', user.password);
+  await page.click("text=Войти");
   await expect(page).toHaveURL("https://netology.ru/profile");
   await browser.close();
 })();
@@ -34,4 +34,3 @@ const { test, expect } = require("@playwright/test");
   ).toBeVisible();
   await browser.close();
 })();
-
