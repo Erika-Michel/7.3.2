@@ -1,8 +1,8 @@
 const { chromium } = require("playwright");
-const { user } = require("../playwright/user.js");
+const user = require("./user.js");
+let email = user.email;
+let password = user.password;
 const { test, expect } = require("@playwright/test");
-//let email = user.email;
-//let password = user.password;
 
 (async () => {
   const browser = await chromium.launch({
